@@ -45,19 +45,21 @@ def apply_risk_rules(
     if state.volatility == "high" and signal.action == Action.BUY:
         return RiskDecision(Action.NO_TRADE, min(signal.confidence, 45), "high", "Volatility is too high for a fresh spot entry.")
 
-    if signal.action == Action.BUY and not _bullish_edge_is_clear(state):
+    # Relaxed bullish/bearish edge requirements for more trades
+    if signal.action == Action.BUY and not _bullish_edge_is_clear_relaxed(state):
         return RiskDecision(Action.NO_TRADE, min(signal.confidence, 55), risk_level, "Bullish scenario does not have enough probability edge.")
 
-    if signal.action == Action.SELL and not _bearish_edge_is_clear(state):
+    if signal.action == Action.SELL and not _bearish_edge_is_clear_relaxed(state):
         return RiskDecision(Action.NO_TRADE, min(signal.confidence, 55), risk_level, "Bearish scenario does not have enough probability edge.")
 
-    if signal.action == Action.BUY and signal.confidence < config.min_buy_confidence:
+    # Lowered confidence thresholds for entry
+    if signal.action == Action.BUY and signal.confidence < max(60, config.min_buy_confidence - 10):
         return RiskDecision(Action.NO_TRADE, signal.confidence, risk_level, "Buy confidence is below the required threshold.")
 
     if signal.action == Action.SELL and not context.has_position:
         return RiskDecision(Action.NO_TRADE, signal.confidence, risk_level, "Sell signal exists, but paper portfolio has no spot position.")
 
-    if signal.action == Action.SELL and signal.confidence < config.min_sell_confidence:
+    if signal.action == Action.SELL and signal.confidence < max(55, config.min_sell_confidence - 10):
         return RiskDecision(Action.NO_TRADE, signal.confidence, risk_level, "Sell confidence is below the required threshold.")
 
     return RiskDecision(signal.action, signal.confidence, risk_level, "Risk rules allow the signal.")
@@ -77,6 +79,18 @@ def _risk_level(state: MarketState) -> str:
     if state.volatility == "medium" or state.fake_breakout_probability >= 45:
         return "medium"
     return "low"
+
+
+def _bullish_edge_is_clear_relaxed(state: MarketState) -> bool:
+    """Relaxed version allowing more trades - only requires bullish to be highest or tied."""
+    strongest_non_bullish = max(state.bearish_probability, state.sideways_probability)
+    return state.bullish_probability >= 40 and state.bullish_probability >= strongest_non_bullish - 5
+
+
+def _bearish_edge_is_clear_relaxed(state: MarketState) -> bool:
+    """Relaxed version allowing more trades - only requires bearish to be highest or tied."""
+    strongest_non_bearish = max(state.bullish_probability, state.sideways_probability)
+    return state.bearish_probability >= 40 and state.bearish_probability >= strongest_non_bearish - 5
 
 
 def _bullish_edge_is_clear(state: MarketState) -> bool:

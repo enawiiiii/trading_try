@@ -63,6 +63,7 @@ class MarketState:
     sideways_probability: int
     evidence_summary: str
     explanation: str
+    trend_strength: str = "moderate"
 
 
 @dataclass(frozen=True)
