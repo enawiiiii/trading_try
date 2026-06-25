@@ -16,6 +16,7 @@ def analyze_market(candles: list[Candle]) -> MarketState:
     current_price = current.close
     sma_20 = sma(closes, 20)
     sma_50 = sma(closes, 50)
+    sma_200 = sma(closes, 200) if len(closes) >= 200 else sma(closes, 60)
     atr_value = atr(candles)
     atr_pct = (atr_value / current_price) * 100 if current_price else 0
     current_rsi = rsi(closes)
@@ -104,6 +105,7 @@ def analyze_market(candles: list[Candle]) -> MarketState:
         sideways_probability=scenarios.sideways,
         evidence_summary=" | ".join(scenarios.evidence),
         explanation=explanation,
+        trend_strength=_trend_strength(closes, sma_20, sma_50, sma_200),
     )
 
 
@@ -166,3 +168,14 @@ def _fake_breakout_probability(
         probability += 15
 
     return max(5, min(90, round(probability)))
+
+
+def _trend_strength(closes: list[float], sma_20: float, sma_50: float, sma_200: float) -> str:
+    """Calculate trend strength based on moving average alignment."""
+    if sma_20 > sma_50 > sma_200:
+        return "strong_bullish"
+    if sma_20 < sma_50 < sma_200:
+        return "strong_bearish"
+    if sma_20 > sma_50 or sma_20 < sma_50:
+        return "moderate"
+    return "weak"

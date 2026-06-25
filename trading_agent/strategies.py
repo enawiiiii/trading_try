@@ -64,22 +64,26 @@ def _action_aware_score(signal: StrategySignal, suitability: float, has_position
 
 def _trend_following(state: MarketState) -> StrategySignal:
     bullish_edge = state.bullish_probability - max(state.bearish_probability, state.sideways_probability)
+    
+    # Relaxed entry rules for better trade frequency
+    in_uptrend = state.trend == "bullish" or state.trend_strength in ["strong_bullish", "moderate"]
+    above_sma = state.current_price > state.support
+    
     if (
-        state.trend == "bullish"
-        and state.structure == "trend continuation"
+        in_uptrend
         and state.volatility != "high"
-        and 42 <= state.rsi <= 68
-        and state.liquidity_score >= 45
-        and state.fake_breakout_probability <= 55
-        and state.bullish_probability >= 60
-        and bullish_edge >= 15
+        and 35 <= state.rsi <= 75
+        and state.liquidity_score >= 40
+        and state.fake_breakout_probability <= 60
+        and state.bullish_probability >= 50
+        and bullish_edge >= 10
     ):
-        confidence = 68 + _quality_bonus(state)
+        confidence = 65 + _quality_bonus(state)
         return StrategySignal(
             strategy=StrategyName.TREND_FOLLOWING,
             action=Action.BUY,
-            confidence=min(88, confidence),
-            reasoning="Trend is bullish and price is holding above the short-term average, but entry still needs risk filters.",
+            confidence=min(85, confidence),
+            reasoning=f"Trend is {state.trend} ({state.trend_strength}) with RSI {state.rsi:.1f}, allowing entry.",
         )
     if state.trend == "bearish":
         return StrategySignal(
@@ -92,12 +96,13 @@ def _trend_following(state: MarketState) -> StrategySignal:
         strategy=StrategyName.TREND_FOLLOWING,
         action=Action.NO_TRADE,
         confidence=45,
-        reasoning="Trend following is selected, but the trend does not have enough clean continuation quality.",
+        reasoning=f"Trend following conditions not met: trend={state.trend}, strength={state.trend_strength}.",
     )
 
 
 def _breakout(state: MarketState) -> StrategySignal:
-    if state.fake_breakout_probability > 55:
+    # Relaxed fake breakout filter for more opportunities
+    if state.fake_breakout_probability > 65:
         return StrategySignal(
             strategy=StrategyName.BREAKOUT,
             action=Action.NO_TRADE,
@@ -105,19 +110,19 @@ def _breakout(state: MarketState) -> StrategySignal:
             reasoning="Breakout exists, but the fake breakout probability is too high for a disciplined entry.",
         )
     if (
-        state.structure == "breakout"
-        and state.current_price > state.resistance
-        and state.liquidity_score >= 55
-        and state.fake_breakout_probability <= 40
+        state.structure in ["breakout", "trend continuation"]
+        and state.current_price > state.support
+        and state.liquidity_score >= 45
+        and state.fake_breakout_probability <= 50
         and state.volatility != "high"
-        and state.bullish_probability >= 55
+        and state.bullish_probability >= 48
     ):
-        confidence = 70 + _quality_bonus(state)
+        confidence = 68 + _quality_bonus(state)
         return StrategySignal(
             strategy=StrategyName.BREAKOUT,
             action=Action.BUY,
-            confidence=min(90, confidence),
-            reasoning="Price broke resistance with acceptable liquidity and controlled fake-breakout risk.",
+            confidence=min(88, confidence),
+            reasoning=f"Price showing breakout behavior with liquidity {state.liquidity_score} and bullish probability {state.bullish_probability}%.",
         )
     if state.current_price < state.support:
         return StrategySignal(
@@ -142,26 +147,27 @@ def _mean_reversion(state: MarketState) -> StrategySignal:
             confidence=42,
             reasoning="Mean reversion is dangerous when volatility is high, so patience is better than forcing a trade.",
         )
+    # Relaxed RSI and support conditions for more entries
     if (
         state.trend == "sideways"
-        and state.sideways_probability >= 40
+        and state.sideways_probability >= 35
         and state.volatility != "high"
-        and state.liquidity_score >= 45
-        and state.rsi < 32
-        and state.current_price <= state.support * 1.008
-        and state.fake_breakout_probability <= 55
+        and state.liquidity_score >= 40
+        and state.rsi < 40
+        and state.current_price <= state.support * 1.015
+        and state.fake_breakout_probability <= 60
     ):
         return StrategySignal(
             strategy=StrategyName.MEAN_REVERSION,
             action=Action.BUY,
-            confidence=72 + _quality_bonus(state),
-            reasoning="Price is near range support and RSI is stretched, giving a controlled mean-reversion setup.",
+            confidence=70 + _quality_bonus(state),
+            reasoning=f"Price near support with oversold RSI {state.rsi:.1f}, good mean-reversion setup.",
         )
-    if state.rsi > 70 or state.current_price >= state.resistance * 0.992:
+    if state.rsi > 65 or state.current_price >= state.resistance * 0.985:
         return StrategySignal(
             strategy=StrategyName.MEAN_REVERSION,
             action=Action.SELL,
-            confidence=67,
+            confidence=65,
             reasoning="Price is near resistance or momentum is overheated, so reducing exposure is favored.",
         )
     return StrategySignal(
