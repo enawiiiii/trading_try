@@ -1,1 +1,52 @@
-(DEVELOPMENT_PLAN_AR.md, optimize_exit_parameters.py, and run_backtest_analysis.py are source code files and should not be ignored)
+```
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+
+# Dependencies
+.venv/
+venv/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Distribution artifacts
+dist/
+build/
+target/
+
+# Python specific
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg-info/
+.eggs/
+.mypy_cache/
+.pytest_cache/
+.tox/
+
+# System files
+.DS_Store
+Thumbs.db
+```
