@@ -1,6 +1,1 @@
-__pycache__/
-*.py[cod]
-.venv/
-data/
-config.json
-.env
+(DEVELOPMENT_PLAN_AR.md, optimize_exit_parameters.py, and run_backtest_analysis.py are source code files and should not be ignored)
