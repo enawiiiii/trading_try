@@ -1,0 +1,42 @@
+{
+  "quote_asset": "USDT",
+  "paper_starting_cash": 10000.0,
+  "risk_per_trade_pct": 1.0,
+  "daily_loss_limit_pct": 3.0,
+  "max_consecutive_losses": 3,
+  "min_buy_confidence": 70,
+  "min_sell_confidence": 65,
+  "max_fake_breakout_probability": 65,
+  "min_liquidity_score": 35,
+  "journal_path": "data/demo_journal.jsonl",
+  "learning_path": "data/demo_learning_state.json",
+  "calibration_path": "data/demo_calibration_state.json",
+  "historical_data_dir": "data/historical",
+  "ml_model_dir": "data/models",
+  "portfolio_path": "data/demo_paper_portfolio.json",
+  "exchange": "bybit",
+  "bybit_market_testnet": false,
+  "bybit_testnet": false,
+  "bybit_demo": true,
+  "bybit_time_offset_ms": -2000,
+  "live_trading_enabled": true,
+  "max_live_order_quote": 25.0,
+  "stop_loss_pct": 1.2,
+  "take_profit_pct": 2.4,
+  "trailing_stop_pct": 0.9,
+  "min_exit_bearish_probability": 45
+  ,
+  "training_symbols": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "LTCUSDT"],
+  "training_intervals": ["1h", "4h"],
+  "training_history_limits": {
+    "1h": 10000,
+    "4h": 5000
+  },
+  "ml_min_accuracy": 38.0,
+  "ml_report_path": "data/models/auto_training_report.json"
+  ,
+  "universe_path": "data/universe.json",
+  "universe_top_n": 20,
+  "universe_min_turnover_24h": 1000000.0,
+  "universe_max_spread_pct": 0.25
+}

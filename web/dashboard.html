@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Spot Agent Control Center</title>
+    <link rel="stylesheet" href="./styles.css?v=20260615-monitor">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <a class="brand" href="#overview" aria-label="Spot Agent overview">
+          <span class="brand-mark">SA</span>
+          <span>
+            <strong>Spot Agent</strong>
+            <small>Controlled spot trading</small>
+          </span>
+        </a>
+
+        <nav class="nav-links" aria-label="Dashboard sections">
+          <a class="active" href="#overview">Overview</a>
+          <a href="#signals">Market Signals</a>
+          <a href="#edge-filter">Edge Filter</a>
+          <a href="#recovery">Recovery</a>
+          <a href="#paper-simulator">Paper Test</a>
+          <a href="#positions">Positions</a>
+          <a href="#exits">Exit Engine</a>
+          <a href="#learning">Learning</a>
+          <a href="#learning-monitor">Learning Monitor</a>
+          <a href="#sources">Data Sources</a>
+          <a href="#journal">Journal</a>
+        </nav>
+
+        <section class="guardrail" aria-label="Trading guardrails">
+          <span class="section-label">Guardrails</span>
+          <ul>
+            <li><span></span>Spot only</li>
+            <li><span></span>No leverage</li>
+            <li><span></span>No margin</li>
+            <li><span></span>Demo/Paper safety</li>
+          </ul>
+        </section>
+      </aside>
+
+      <main class="workspace">
+        <header class="command-header">
+          <div>
+            <span class="section-label" id="modeLabel">Bybit demo monitor</span>
+            <h1>Trading Control Center</h1>
+            <p id="headerSubtitle">Loading exchange status and risk envelope...</p>
+          </div>
+
+          <div class="command-actions">
+            <div class="system-chip" aria-live="polite">
+              <span id="statusDot" class="status-dot"></span>
+              <span id="statusValue">Connecting</span>
+            </div>
+            <label class="select-wrap">
+              <span>Interval</span>
+              <select id="intervalSelect" aria-label="Chart interval">
+                <option value="15m">15m</option>
+                <option value="1h" selected>1h</option>
+                <option value="4h">4h</option>
+                <option value="1d">1d</option>
+              </select>
+            </label>
+            <button id="refreshBtn" class="refresh-button" type="button">
+              <span class="refresh-icon" aria-hidden="true"></span>
+              Refresh
+            </button>
+          </div>
+        </header>
+
+        <div id="errorBanner" class="error-banner" role="alert" hidden></div>
+
+        <section id="overview" class="kpi-grid" aria-label="Portfolio overview">
+          <article class="kpi-card accent-cyan">
+            <span>Total Equity</span>
+            <strong id="equityValue">$0.00</strong>
+            <small id="equityMeta">Last successful update pending</small>
+          </article>
+          <article class="kpi-card">
+            <span>Cash</span>
+            <strong id="cashValue">$0.00</strong>
+            <small>Available paper/demo capital</small>
+          </article>
+          <article class="kpi-card accent-green">
+            <span>Open Positions</span>
+            <strong id="positionCount">0</strong>
+            <small id="positionMeta">No exposure detected</small>
+          </article>
+          <article class="kpi-card" id="pnlCard">
+            <span>Unrealized PnL</span>
+            <strong id="pnlValue">$0.00</strong>
+            <small id="pnlMeta">Calculated from tracked positions</small>
+          </article>
+          <article class="kpi-card accent-amber">
+            <span>Consecutive Losses</span>
+            <strong id="lossValue">0</strong>
+            <small>Risk engine brake signal</small>
+          </article>
+          <article class="kpi-card">
+            <span>Risk Caps</span>
+            <strong id="riskCaps">SL / TP / Trail</strong>
+            <small>Configured exit limits</small>
+          </article>
+        </section>
+
+        <section id="signals" class="panel panel-wide">
+          <div class="panel-header">
+            <div>
+              <span class="section-label">Evidence board</span>
+              <h2>Market Signals</h2>
+            </div>
+            <div class="panel-meta">
+              <span id="assetCount">0 symbols</span>
+              <span id="autoRefresh">Auto-refresh 30s</span>
+            </div>
+          </div>
+          <div id="signalGrid" class="signal-grid skeleton-area"></div>
+        </section>
+
+        <section id="edge-filter" class="panel panel-wide">
+          <div class="panel-header">
+            <div>
+              <span class="section-label">Monitor only</span>
+              <h2>Edge Filter</h2>
+            </div>
+            <div class="panel-meta">
+              <span id="edgeEventCount">0 events</span>
+              <span id="edgeAvgScore">Score pending</span>
+            </div>
+          </div>
+          <div class="edge-grid">
+            <article class="edge-score">
+              <span>Allow</span>
+              <strong id="edgeAllow">0</strong>
+              <small>Legacy allow events</small>
+            </article>
+            <article class="edge-score">
+              <span>Weak</span>
+              <strong id="edgeWeakAllow">0</strong>
+              <small>Small-size candidate, monitor only</small>
+            </article>
+            <article class="edge-score">
+              <span>Strong</span>
+              <strong id="edgeStrongAllow">0</strong>
+              <small>Best candidate tier, monitor only</small>
+            </article>
+            <article class="edge-score">
+              <span>Block</span>
+              <strong id="edgeBlock">0</strong>
+              <small>Would block if activated later</small>
+            </article>
+            <article class="edge-score">
+              <span>Observe</span>
+              <strong id="edgeObserve">0</strong>
+              <small>NO TRADE / passive events</small>
+            </article>
+            <article class="edge-score">
+              <span>Avg EV</span>
+              <strong id="edgeAvgEv">0%</strong>
+              <small>Recent model EV estimate</small>
+            </article>
+          </div>
+          <div id="edgeRecentList" class="edge-recent"></div>
+        </section>
+
+        <section id="recovery" class="panel panel-wide">
+          <div class="panel-header">
+            <div>
+              <span class="section-label">Shadow validation</span>
+              <h2>Recovery Monitor</h2>
+            </div>
+            <div class="panel-meta">
+              <span id="recoveryUpdated">Waiting for shadow report</span>
+              <span id="recoveryReadyCount">0 ready</span>
+            </div>
+          </div>
+          <div class="edge-grid">
+            <article class="edge-score">
+              <span>Ready Now</span>
+              <strong id="recoveryReady">0</strong>
+              <small>Recovery pockets active now</small>
+            </article>
+            <article class="edge-score">
+              <span>Open Shadow</span>
+              <strong id="recoveryOpen">0</strong>
+              <small>Monitor-only paperless trades</small>
+            </article>
+            <article class="edge-score">
+              <span>Closed Shadow</span>
+              <strong id="recoveryClosed">0</strong>
+              <small>Completed TP/SL checks</small>
+            </article>
+            <article class="edge-score">
+              <span>Shadow Win Rate</span>
+              <strong id="recoveryWinRate">0%</strong>
+              <small id="recoveryAvg">Avg 0%</small>
+            </article>
+            <article class="edge-score">
+              <span>Promotion</span>
+              <strong id="recoveryPromotion">Not eligible</strong>
+              <small id="recoveryPromotionReason">Waiting for shadow evidence</small>
+            </article>
+          </div>
+          <div class="monitor-layout">
+            <section>
+              <div class="mini-header">
+                <h3>Open Shadow</h3>
+                <span id="recoveryOpenMeta">0 open</span>
+              </div>
+              <div id="recoveryOpenList" class="monitor-list"></div>
+            </section>
+            <section>
+              <div class="mini-header">
+                <h3>Ready Now</h3>
+                <span id="recoveryReadyMeta">0 ready</span>
+              </div>
+              <div id="recoveryReadyList" class="monitor-list"></div>
+            </section>
+            <section>
+              <div class="mini-header">
+                <h3>Recent Closed</h3>
+                <span id="recoveryClosedMeta">0 closed</span>
+              </div>
+              <div id="recoveryClosedList" class="monitor-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="paper-simulator" class="panel panel-wide">
+          <div class="panel-header">
+            <div>
+              <span class="section-label">Monitor-only execution test</span>
+              <h2>Paper Simulator</h2>
+            </div>
+            <div class="panel-meta">
+              <span id="paperUpdated">Waiting for paper report</span>
+              <span id="paperMode">Execution disabled</span>
+            </div>
+          </div>
+          <div class="edge-grid">
+            <article class="edge-score">
+              <span>Open</span>
+              <strong id="paperOpen">0</strong>
+              <small>Virtual trades in progress</small>
+            </article>
+            <article class="edge-score">
+              <span>Closed</span>
+              <strong id="paperClosed">0</strong>
+              <small>Completed TP/SL checks</small>
+            </article>
+            <article class="edge-score">
+              <span>Win Rate</span>
+              <strong id="paperWinRate">0%</strong>
+              <small id="paperAvg">Avg 0%</small>
+            </article>
+            <article class="edge-score">
+              <span>Realized PnL</span>
+              <strong id="paperRealized">$0.00</strong>
+              <small id="paperUnrealized">Open $0.00</small>
+            </article>
+            <article class="edge-score">
+              <span>Drawdown</span>
+              <strong id="paperDrawdown">0%</strong>
+              <small>Closed-trade curve</small>
+            </article>
+          </div>
+          <div class="monitor-layout">
+            <section>
+              <div class="mini-header">
+                <h3>Open Paper</h3>
+                <span id="paperOpenMeta">0 open</span>
+              </div>
+              <div id="paperOpenList" class="monitor-list"></div>
+            </section>
+            <section>
+              <div class="mini-header">
+                <h3>By Lane</h3>
+                <span id="paperLaneMeta">0 lanes</span>
+              </div>
+              <div id="paperLaneList" class="monitor-list"></div>
+            </section>
+            <section>
+              <div class="mini-header">
+                <h3>Recent Closed</h3>
+                <span id="paperClosedMeta">0 closed</span>
+              </div>
+              <div id="paperClosedList" class="monitor-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="sources" class="panel">
+          <div class="panel-header">
+            <div>
+              <span class="section-label">Market data</span>
+              <h2>Data Sources</h2>
+            </div>
+            <div class="panel-meta">
+              <span>Bybit + Binance + Depth</span>
+            </div>
+          </div>
+          <div id="dataSourcesList" class="source-grid"></div>
+        </section>
+
+        <section class="two-column">
+          <section id="positions" class="panel">
+            <div class="panel-header">
+              <div>
+                <span class="section-label">Portfolio</span>
+                <h2>Positions</h2>
+              </div>
+            </div>
+            <div id="positionsList" class="stack-list"></div>
+          </section>
+
+          <section id="exits" class="panel">
+            <div class="panel-header">
+              <div>
+                <span class="section-label">Sell discipline</span>
+                <h2>Exit Engine</h2>
+              </div>
+            </div>
+            <div id="exitList" class="stack-list"></div>
+          </section>
+        </section>
+
+        <section class="two-column">
+          <section id="learning" class="panel">
+            <div class="panel-header">
+              <div>
+                <span class="section-label">Self-learning</span>
+                <h2>Strategy Weights</h2>
+              </div>
+            </div>
+            <div id="weightsList" class="weights-list"></div>
+          </section>
+
+          <section id="journal" class="panel">
+            <div class="panel-header">
+              <div>
+                <span class="section-label">Recent decisions</span>
+                <h2>Journal</h2>
+              </div>
+            </div>
+            <div id="journalList" class="timeline"></div>
+          </section>
+        </section>
+
+        <section id="learning-monitor" class="panel panel-wide monitor-panel">
+          <div class="panel-header">
+            <div>
+              <span class="section-label">Model health</span>
+              <h2>Learning Monitor</h2>
+            </div>
+            <div class="panel-meta">
+              <span id="monitorDaemon">Daemon unknown</span>
+              <span id="monitorGenerated">Waiting for monitor</span>
+            </div>
+          </div>
+
+          <div class="monitor-grid">
+            <article class="monitor-score">
+              <span>Approval Rate</span>
+              <strong id="monitorApproval">0%</strong>
+              <small id="monitorCounts">0 approved / 0 rejected</small>
+            </article>
+            <article class="monitor-score">
+              <span>Avg Accuracy</span>
+              <strong id="monitorAccuracy">0%</strong>
+              <small>Weak until F1 and walk-forward are added</small>
+            </article>
+            <article class="monitor-score">
+              <span>Backtest Accuracy</span>
+              <strong id="monitorBacktest">0%</strong>
+              <small id="monitorGap">Gap pending</small>
+            </article>
+            <article class="monitor-score">
+              <span>Scenario Bias</span>
+              <strong id="monitorScenario">None</strong>
+              <small id="monitorScenarioMeta">No current predictions</small>
+            </article>
+          </div>
+
+          <div class="monitor-layout">
+            <section>
+              <div class="mini-header">
+                <h3>Risk Flags</h3>
+                <span id="monitorFlagCount">0 flags</span>
+              </div>
+              <div id="monitorFlags" class="monitor-list"></div>
+            </section>
+
+            <section>
+              <div class="mini-header">
+                <h3>Top Models</h3>
+                <span>Current cycle</span>
+              </div>
+              <div id="monitorTopModels" class="monitor-list compact"></div>
+            </section>
+
+            <section>
+              <div class="mini-header">
+                <h3>Weak Models</h3>
+                <span>Needs caution</span>
+              </div>
+              <div id="monitorWeakModels" class="monitor-list compact"></div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./dashboard.js?v=20260623-strategy-display"></script>
+  </body>
+</html>
