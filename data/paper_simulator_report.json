@@ -1,0 +1,48 @@
+{
+  "generated_at": "2026-06-25T14:35:27.986584+00:00",
+  "mode": "paper_simulator_monitor_only",
+  "execution_enabled": false,
+  "quote_amount": 10.0,
+  "source_hours": 6,
+  "saved_path": "data/paper_simulator_trades.json",
+  "opened_now": [],
+  "closed_now": [],
+  "summary": {
+    "total": 0,
+    "open": 0,
+    "closed": 0,
+    "win_rate_pct": 0.0,
+    "avg_realized_pct": 0.0,
+    "avg_unrealized_pct": 0.0,
+    "realized_quote": 0,
+    "unrealized_quote": 0,
+    "max_drawdown_pct": 0.0,
+    "outcomes": {}
+  },
+  "by_lane": [],
+  "lane_guards": [
+    {
+      "lane": "EDGE_ALLOW_PAPER",
+      "blocked": false,
+      "recent_losses": 0,
+      "max_drawdown_pct": 0.0,
+      "reason": "ok"
+    },
+    {
+      "lane": "EXPLORATION_LONG_PAPER",
+      "blocked": false,
+      "recent_losses": 0,
+      "max_drawdown_pct": 0.0,
+      "reason": "ok"
+    },
+    {
+      "lane": "RECOVERY_PAPER",
+      "blocked": false,
+      "recent_losses": 0,
+      "max_drawdown_pct": 0.0,
+      "reason": "ok"
+    }
+  ],
+  "open_trades": [],
+  "recent_closed": []
+}

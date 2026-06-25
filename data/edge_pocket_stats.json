@@ -1,0 +1,38 @@
+{
+  "BTCUSDT_1h": {
+    "buy_events": 36,
+    "avg_realized_pct": -0.1867,
+    "win_rate_pct": 36.11,
+    "source": "edge_backtest"
+  },
+  "BTCUSDT_4h": {
+    "buy_events": 0,
+    "avg_realized_pct": 0.0,
+    "win_rate_pct": 0.0,
+    "source": "edge_backtest"
+  },
+  "ETHUSDT_1h": {
+    "buy_events": 34,
+    "avg_realized_pct": -0.556,
+    "win_rate_pct": 23.53,
+    "source": "edge_backtest"
+  },
+  "ETHUSDT_4h": {
+    "buy_events": 0,
+    "avg_realized_pct": 0.0,
+    "win_rate_pct": 0.0,
+    "source": "edge_backtest"
+  },
+  "SOLUSDT_1h": {
+    "buy_events": 40,
+    "avg_realized_pct": -0.1625,
+    "win_rate_pct": 40.0,
+    "source": "edge_backtest"
+  },
+  "SOLUSDT_4h": {
+    "buy_events": 0,
+    "avg_realized_pct": 0.0,
+    "win_rate_pct": 0.0,
+    "source": "edge_backtest"
+  }
+}

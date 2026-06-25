@@ -1,0 +1,22 @@
+{
+  "started_at": "2026-06-25T14:34:01.127689+00:00",
+  "provider": "bybit",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "LTCUSDT"
+  ],
+  "intervals": [
+    "1h",
+    "4h"
+  ],
+  "models": {},
+  "summary": {
+    "trained": 0,
+    "approved": 0,
+    "rejected": 0,
+    "errors": 0
+  },
+  "current_task": "BTCUSDT_1h"
+}

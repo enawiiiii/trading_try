@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-06-25T14:35:38.930068+00:00",
+  "hours": 24,
+  "events": 3,
+  "buy_events": 0,
+  "evaluated_buy_events": 0,
+  "summary": {
+    "total": 0,
+    "evaluated": 0,
+    "pending": 0,
+    "win_rate_pct": 0.0,
+    "loss_rate_pct": 0.0,
+    "avg_realized_pct": 0.0,
+    "best_realized_pct": 0.0,
+    "worst_realized_pct": 0.0,
+    "outcomes": {}
+  },
+  "by_edge_action": [],
+  "by_symbol_interval": [],
+  "by_edge_symbol_interval": [],
+  "recent_pending": []
+}

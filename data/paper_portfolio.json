@@ -1,0 +1,12 @@
+{
+  "cash": 10000.0,
+  "positions": {},
+  "last_prices": {
+    "BTCUSDT": 58301.1
+  },
+  "cost_basis": {},
+  "peak_prices": {},
+  "daily_pnl_pct": 0.0,
+  "consecutive_losses": 0,
+  "equity": 10000.0
+}

@@ -1,0 +1,173 @@
+{
+  "edge_filter_summary": {
+    "events": 1500,
+    "allow": 0,
+    "weak_allow": 0,
+    "strong_allow": 0,
+    "recovery_monitor": 0,
+    "block": 67,
+    "observe": 1433,
+    "buy": 110,
+    "sell": 0,
+    "no_trade": 1390,
+    "buy_events": 110,
+    "blocked_buy_events": 9,
+    "allowed_buy_events": 0,
+    "all_buy_avg_realized_pct": -0.292,
+    "all_buy_win_rate_pct": 33.64,
+    "blocked_buy_avg_realized_pct": -0.1657,
+    "allowed_buy_avg_realized_pct": 0.0,
+    "blocked_buy_win_rate_pct": 33.33,
+    "allowed_buy_win_rate_pct": 0.0,
+    "exploration_long_events": 0,
+    "exploration_long_avg_realized_pct": 0.0,
+    "exploration_long_win_rate_pct": 0.0,
+    "edge_allow_paper_events": 0,
+    "recovery_paper_events": 0,
+    "avg_score": 27.25,
+    "errors": 3
+  },
+  "probability_report": {
+    "samples": 9913,
+    "accuracy": 36.04,
+    "high_confidence_samples": 9840,
+    "high_confidence_accuracy": 36.07,
+    "prediction_distribution": {
+      "bullish": 1734,
+      "sideways": 6240,
+      "bearish": 1939
+    },
+    "actual_distribution": {
+      "sideways": 3586,
+      "bullish": 3135,
+      "bearish": 3192
+    },
+    "by_scenario": {
+      "bullish": {
+        "samples": 1734,
+        "accuracy": 28.95,
+        "avg_confidence": 58.12
+      },
+      "bearish": {
+        "samples": 1939,
+        "accuracy": 35.22,
+        "avg_confidence": 59.19
+      },
+      "sideways": {
+        "samples": 6240,
+        "accuracy": 38.27,
+        "avg_confidence": 56.21
+      }
+    },
+    "last_10": [
+      {
+        "predicted": "bearish",
+        "actual": "bullish",
+        "correct": false,
+        "confidence": 53,
+        "move_pct": 0.40634174600941136,
+        "bullish_probability": 24,
+        "bearish_probability": 53,
+        "sideways_probability": 23
+      },
+      {
+        "predicted": "bearish",
+        "actual": "bullish",
+        "correct": false,
+        "confidence": 53,
+        "move_pct": 1.1905876709200636,
+        "bullish_probability": 24,
+        "bearish_probability": 53,
+        "sideways_probability": 23
+      },
+      {
+        "predicted": "bearish",
+        "actual": "bullish",
+        "correct": false,
+        "confidence": 53,
+        "move_pct": 1.0674216176210554,
+        "bullish_probability": 24,
+        "bearish_probability": 53,
+        "sideways_probability": 23
+      },
+      {
+        "predicted": "bearish",
+        "actual": "bullish",
+        "correct": false,
+        "confidence": 53,
+        "move_pct": 1.80399275837744,
+        "bullish_probability": 24,
+        "bearish_probability": 53,
+        "sideways_probability": 23
+      },
+      {
+        "predicted": "bearish",
+        "actual": "bullish",
+        "correct": false,
+        "confidence": 51,
+        "move_pct": 1.3021359165923783,
+        "bullish_probability": 25,
+        "bearish_probability": 51,
+        "sideways_probability": 24
+      },
+      {
+        "predicted": "bearish",
+        "actual": "bullish",
+        "correct": false,
+        "confidence": 51,
+        "move_pct": 1.5424118010869374,
+        "bullish_probability": 25,
+        "bearish_probability": 51,
+        "sideways_probability": 24
+      },
+      {
+        "predicted": "bearish",
+        "actual": "bullish",
+        "correct": false,
+        "confidence": 51,
+        "move_pct": 0.6366350977126446,
+        "bullish_probability": 25,
+        "bearish_probability": 51,
+        "sideways_probability": 24
+      },
+      {
+        "predicted": "sideways",
+        "actual": "sideways",
+        "correct": true,
+        "confidence": 52,
+        "move_pct": -0.12598912875176704,
+        "bullish_probability": 32,
+        "bearish_probability": 16,
+        "sideways_probability": 52
+      },
+      {
+        "predicted": "sideways",
+        "actual": "bearish",
+        "correct": false,
+        "confidence": 52,
+        "move_pct": -0.5789543752780407,
+        "bullish_probability": 32,
+        "bearish_probability": 16,
+        "sideways_probability": 52
+      },
+      {
+        "predicted": "sideways",
+        "actual": "bearish",
+        "correct": false,
+        "confidence": 51,
+        "move_pct": -5.545951918450276,
+        "bullish_probability": 26,
+        "bearish_probability": 23,
+        "sideways_probability": 51
+      }
+    ],
+    "calibration_note": "For >=55% confidence predictions, realized accuracy was 37.79% vs average stated confidence 61.52% (gap -23.73%)."
+  },
+  "readiness_score": 20,
+  "recommendations": [
+    "❌ إعادة تدريب النموذج أو تعديل المعايير",
+    "⚠ تعديل معايير الخروج (Take Profit / Stop Loss)",
+    "⚠ تخفيف قيود الفلتر لرؤية نتائج أكثر",
+    "⚠ مزيد من التدريب للنموذج"
+  ]
+}
