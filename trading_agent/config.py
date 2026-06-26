@@ -13,10 +13,10 @@ class AgentConfig:
     risk_per_trade_pct: float = 1.0
     daily_loss_limit_pct: float = 3.0
     max_consecutive_losses: int = 3
-    min_buy_confidence: int = 70
-    min_sell_confidence: int = 65
-    max_fake_breakout_probability: int = 65
-    min_liquidity_score: int = 35
+    min_buy_confidence: int = 55  # Lowered from 70 to allow more trades
+    min_sell_confidence: int = 50  # Lowered from 65 to allow more exits
+    max_fake_breakout_probability: int = 70  # Raised from 65 to allow more breakout trades
+    min_liquidity_score: int = 30  # Lowered from 35 to allow more trades
     journal_path: str = "data/journal.jsonl"
     learning_path: str = "data/learning_state.json"
     calibration_path: str = "data/calibration_state.json"
@@ -30,9 +30,9 @@ class AgentConfig:
     bybit_time_offset_ms: int = 0
     live_trading_enabled: bool = False
     max_live_order_quote: float = 25.0
-    stop_loss_pct: float = 1.2
-    take_profit_pct: float = 2.4
-    trailing_stop_pct: float = 0.9
+    stop_loss_pct: float = 1.0  # Tighter stop loss
+    take_profit_pct: float = 2.0  # More realistic target
+    trailing_stop_pct: float = 0.8
     min_exit_bearish_probability: int = 45
     training_symbols: tuple[str, ...] = ("BTCUSDT", "ETHUSDT", "SOLUSDT", "LTCUSDT")
     training_intervals: tuple[str, ...] = ("1h", "4h")
