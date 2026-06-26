@@ -1,29 +1,84 @@
-```
+```gitignore
 # Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.py~
+*.pyc~
+*.pyo~
+*.pyd~
+*.egg-info/
+.Python
+*.so
+*.dylib
+*.dll
 
-# Dependencies
+# Virtual environments
 venv/
 .venv/
-.env
-.env.local
-.env.*
+env/
+.ENV/
+env.bak/
+venv.bak/
+
+# Build artifacts
+build/
+dist/
+*.egg
+*.whl
+*.zip
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+
+# Testing
+.coverage
+coverage/
+htmlcov/
+.nyc_output/
+.mypy_cache/
+.pytest_cache/
+.hypothesis/
 
 # Logs
 *.log
 
-# Editor/IDE
+# Environment variables
+.env
+.env.local
+.env.*
+!.env.example
+
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*.tmp
+*~
+.DS_Store
+Thumbs.db
 
-# Build artifacts
-dist/
-build/
-target/
+# System
+*.tmp
+*.temp
+*.bak
+*.backup
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Thumbs.db:encryptable
+*:Zone.Identifier
+desktop.ini
+Icon?
+VolumeLabel
 ```
